@@ -1,0 +1,21 @@
+# BQ Webhook Test
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Cuales son los 5 productos mas vendidos",
+    "fulfillmentInfo": {
+      "tag": "bq_webhook"
+    }
+  }' \
+  http://localhost:8080
+
+# DS Webhook Test
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "What is the attention mechanism",
+    "fulfillmentInfo": {
+      "tag": "ds_webhook"
+    }
+  }' \
+  http://localhost:8080

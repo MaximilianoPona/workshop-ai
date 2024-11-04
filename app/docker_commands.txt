@@ -1,0 +1,6 @@
+sudo docker login
+sudo docker build -t docker-test:latest .
+sudo docker run -p 8080:8080 docker-test
+
+# See the files inside the docker image
+sudo docker run -it --rm docker-test /bin/bash

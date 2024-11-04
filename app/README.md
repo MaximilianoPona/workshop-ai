@@ -79,7 +79,7 @@ The following diagram illustrates the high-level architecture of the integration
     - Upload your files (`.pdf`, `.html`, `.txt`, etc.) to the bucket. You can find example files in the `papers` folder.
 
 - **Create a Datastore index:**
-    - Go to Agent Builder in Dialogflow CX.
+    - Go to Agent Builder.
     - Enable the Datastore API.
     - Create a Search app.
     - Create the Datastore index:
@@ -103,7 +103,9 @@ The following diagram illustrates the high-level architecture of the integration
 - Enable the BigQuery API.
 - Create a new dataset.
 - Create a new table.
+- Select the upload option.
 - Import data into the BigQuery table. You can use the `.csv` file in the `catalog` folder, or your own data.
+- If you use the provided `.csv` file select the infer schema checkbox.
 - **Important:** Ensure this step is completed before deploying to Cloud Run.
 
 ### 5. Create Webhooks
@@ -112,6 +114,7 @@ The following diagram illustrates the high-level architecture of the integration
 - Navigate to the `webhook` folder.
 - Authenticate with a GCP account that has the necessary permissions for deployment (refer to the `roles.png` image for required roles).
 - Deploy the webhooks to Cloud Run using the following `gcloud` command:
+**Note:** Make sure to create and complete the .env file inside the `webhook` folder.
 
 ```bash
 gcloud functions deploy YOUR_FUNCTION_NAME \
@@ -121,6 +124,7 @@ gcloud functions deploy YOUR_FUNCTION_NAME \
 --runtime=python310 \
 --entry-point=YOUR_CODE_ENTRYPOINT \
 --memory=1GiB \
+--min-instances=1 \
 --trigger-http
 ```
 
@@ -137,6 +141,9 @@ gcloud functions deploy YOUR_FUNCTION_NAME \
     - Select the three dots next to your agent and click "Restore".
     - Upload the `exported_agent_telegram-bot.blob` file.
     - Click "Restore".
+- Configure the webhook:
+    - Go to `Manage` > `Webhooks`.
+    - Select `webhook` and change the url.
 - Attach the webhook to the user intention in Dialogflow:
     - Copy your Cloud Run function URL.
     - **Step 1:**
@@ -159,6 +166,7 @@ gcloud functions deploy YOUR_FUNCTION_NAME \
 ### 8. Deploy the Cloud Run App
 
 - Complete the `.env` file in the `app` directory.
+- Move to the `app` directory.
 - Build the Docker image:
 
 ```bash
@@ -169,7 +177,7 @@ gcloud builds submit --tag gcr.io/your-project-id/image-name
 
 ```bash
 gcloud run deploy --image gcr.io/workshop-ai-community/workshop-image \
-  --service-account 2822286151-compute@developer.gserviceaccount.com \
+  --service-account your-service-account \
   --memory 2Gi \
   --port 8080 \
   --allow-unauthenticated \
